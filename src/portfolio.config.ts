@@ -11,13 +11,18 @@ import { parsePortfolioConfig } from "@/lib/config/schema";
  *   Images go in /public/projects/.
  */
 export const portfolioConfig = parsePortfolioConfig({
-  profile: {},
+  profile: {
+    name: "Rubén",
+    bio: "Estudiante de Desarrollo de Aplicaciones Multiplataforma (DAM). Construyo aplicaciones web con TypeScript y automatizo tareas con PowerShell e IA.",
+  },
   links: {
     github: "https://github.com/Rubenpd66",
     email: "rubenpd66@gmail.com",
   },
   featured: [
-    // { repo: "portfolio", image: { src: "/projects/portfolio.png", alt: "Portada del portfolio" }, demoUrl: "https://..." },
+    { repo: "PROYECTO-IA" },
+    { repo: "portfolio" },
+    // Optional extras: image: { src: "/projects/x.png", alt: "..." }, demoUrl: "https://..."
   ],
   excluded: [],
   privateProjects: [
