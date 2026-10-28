@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { FeaturedProject } from "@/lib/projects/types";
+import { projectPath } from "@/lib/seo/metadata";
 import { ExternalLink } from "./ExternalLink";
 import { type FeaturedView, toFeaturedView } from "./featuredView";
 import { PrivateBadge } from "./PrivateBadge";
@@ -34,7 +35,7 @@ function FeaturedCard({ view }: { view: FeaturedView }) {
         <TechList items={view.technologies} label={`Tecnologías de ${view.title}`} />
         <div className="mt-auto flex flex-wrap gap-x-5 pt-2 text-sm">
           <Link
-            href={`/proyectos/${view.slug}`}
+            href={projectPath(view.slug)}
             aria-label={`Ver detalles de ${view.title}`}
             className={textLinkClass}
           >

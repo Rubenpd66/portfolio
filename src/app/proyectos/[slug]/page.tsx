@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { ProjectDetail } from "@/components/ProjectDetail";
 import { getPortfolioData } from "@/lib/portfolio/data";
 import type { FeaturedProject } from "@/lib/projects/types";
+import { projectPath, projectSeo } from "@/lib/seo/metadata";
+import { SITE_NAME } from "@/lib/seo/site-info";
 
 /** Cache Components rejects an empty list; this slug never matches, so it renders a 404. */
 const PLACEHOLDER_SLUG = "__sin-proyectos__";
@@ -21,9 +23,15 @@ async function findFeatured(slug: string): Promise<FeaturedProject | undefined> 
 export async function generateMetadata({ params }: PageProps<"/proyectos/[slug]">): Promise<Metadata> {
   const item = await findFeatured((await params).slug);
   if (!item) return {};
-  const title = item.kind === "public" ? item.project.name : item.title;
-  const description = item.kind === "public" ? (item.summary ?? item.project.description) : item.description;
-  return { title: `${title} · Rubén · Portfolio`, description: description ?? undefined };
+  const { title, description } = projectSeo(item);
+  const url = projectPath(item.slug);
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "article", locale: "es_ES", siteName: SITE_NAME, title, description, url },
+    twitter: { card: "summary_large_image", title, description },
+  };
 }
 
 export default async function ProjectPage({ params }: PageProps<"/proyectos/[slug]">) {
