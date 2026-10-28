@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { FeaturedProject, ImageRef } from "@/lib/projects/types";
-import { httpsOrNull } from "@/lib/utils/format";
+import type { FeaturedProject } from "@/lib/projects/types";
 import { ExternalLink } from "./ExternalLink";
+import { type FeaturedView, toFeaturedView } from "./featuredView";
+import { PrivateBadge } from "./PrivateBadge";
 import { textLinkClass } from "./styles";
 import { TechList } from "./TechList";
 
@@ -10,51 +11,14 @@ interface FeaturedProjectsProps {
   items: readonly FeaturedProject[];
 }
 
-/** Display fields shared by public and private projects. Private ones never get a code link. */
-interface CardView {
-  slug: string;
-  title: string;
-  text: string | null;
-  technologies: readonly string[];
-  image: ImageRef | null;
-  demoUrl: string | null;
-  codeUrl: string | null;
-  isPrivate: boolean;
-}
-
-function toView(item: FeaturedProject): CardView {
-  if (item.kind === "private") {
-    return {
-      slug: item.slug,
-      title: item.title,
-      text: item.description,
-      technologies: item.technologies,
-      image: item.images[0] ?? null,
-      demoUrl: httpsOrNull(item.demoUrl),
-      codeUrl: null,
-      isPrivate: true,
-    };
-  }
-  return {
-    slug: item.slug,
-    title: item.project.name,
-    text: item.summary ?? item.project.description,
-    // A topic can repeat a language name; keys in TechList must be unique.
-    technologies: [...new Set([...item.project.languages, ...item.project.topics])],
-    image: item.image,
-    demoUrl: httpsOrNull(item.demoUrl),
-    codeUrl: item.project.repoUrl,
-    isPrivate: false,
-  };
-}
-
-function FeaturedCard({ view }: { view: CardView }) {
+function FeaturedCard({ view }: { view: FeaturedView }) {
+  const image = view.images[0];
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md">
-      {view.image && (
+      {image && (
         <Image
-          src={view.image.src}
-          alt={view.image.alt}
+          src={image.src}
+          alt={image.alt}
           width={640}
           height={360}
           sizes="(min-width: 768px) 50vw, 100vw"
@@ -64,11 +28,7 @@ function FeaturedCard({ view }: { view: CardView }) {
       <div className="flex flex-1 flex-col gap-3 p-6">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="text-xl font-semibold">{view.title}</h3>
-          {view.isPrivate && (
-            <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-muted">
-              Proyecto privado
-            </span>
-          )}
+          {view.isPrivate && <PrivateBadge />}
         </div>
         {view.text && <p className="text-pretty text-muted">{view.text}</p>}
         <TechList items={view.technologies} label={`Tecnologías de ${view.title}`} />
@@ -113,7 +73,7 @@ export function FeaturedProjects({ items }: FeaturedProjectsProps) {
       </h2>
       <div className="grid gap-6 md:grid-cols-2">
         {items.map((item) => (
-          <FeaturedCard key={item.slug} view={toView(item)} />
+          <FeaturedCard key={item.slug} view={toFeaturedView(item)} />
         ))}
       </div>
     </section>

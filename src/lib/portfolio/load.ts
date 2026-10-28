@@ -6,8 +6,7 @@ import { buildFeatured, resolveProfile } from "@/lib/projects/featured";
 import { sortProjects } from "@/lib/projects/query";
 import { computeStack } from "@/lib/projects/stack";
 import { repoSlug, selectVisible, toProject } from "@/lib/projects/transform";
-import type { FeaturedProject, Profile, Project, StackEntry } from "@/lib/projects/types";
-import { summarizeReadme } from "@/lib/readme/summary";
+import type { FeaturedProject, Profile, Project, ReadmeDoc, StackEntry } from "@/lib/projects/types";
 import { mapSettled } from "@/lib/utils/concurrency";
 
 /** Keeps per-repo requests well below GitHub's secondary rate limits. */
@@ -43,10 +42,11 @@ export async function loadPortfolio(
     mapSettled(featuredRepos, MAX_CONCURRENT_REQUESTS, (repo) => client.getReadme(repo)),
   ]);
   const languageMaps = languageResults.map((result, i) => valueOr(result, {}, visible[i], "lenguajes"));
-  const summaries = new Map(
-    readmeResults.map((result, i) => {
-      const readme = valueOr(result, null, featuredRepos[i], "README");
-      return [repoSlug(featuredRepos[i]?.name ?? ""), readme === null ? null : summarizeReadme(readme)];
+  const readmes = new Map(
+    featuredRepos.map((repo, i): [string, ReadmeDoc | null] => {
+      const markdown = valueOr(readmeResults[i], null, repo, "README");
+      const context = { owner: user.login, repo: repo.name, branch: repo.default_branch };
+      return [repoSlug(repo.name), markdown === null ? null : { markdown, context }];
     }),
   );
 
@@ -54,7 +54,7 @@ export async function loadPortfolio(
   return {
     profile: resolveProfile(user, config.profile),
     links: config.links,
-    featured: buildFeatured(config, projects, summaries),
+    featured: buildFeatured(config, projects, readmes),
     projects: sortProjects(projects, "updated"),
     stack: computeStack(languageMaps),
   };

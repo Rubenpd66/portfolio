@@ -1,3 +1,5 @@
+import type { RepoContext } from "@/lib/readme/urls";
+
 /** Public repository, already transformed into the shape the UI consumes. */
 export interface Project {
   readonly slug: string;
@@ -20,6 +22,12 @@ export interface ImageRef {
   readonly alt: string;
 }
 
+/** Raw README of a public repo plus what is needed to resolve its relative URLs. */
+export interface ReadmeDoc {
+  readonly markdown: string;
+  readonly context: RepoContext;
+}
+
 export interface PublicFeatured {
   readonly kind: "public";
   readonly slug: string;
@@ -27,6 +35,7 @@ export interface PublicFeatured {
   readonly image: ImageRef | null;
   readonly demoUrl: string | null;
   readonly summary: string | null;
+  readonly readme: ReadmeDoc | null;
 }
 
 /** Private repo: every field comes from the config, never from the GitHub API. */

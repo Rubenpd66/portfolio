@@ -2,6 +2,11 @@ import { describe, expect, it } from "vitest";
 import { makeProject, makeUser } from "../../../test/fixtures";
 import { parsePortfolioConfig } from "../config/schema";
 import { buildFeatured, resolveProfile } from "./featured";
+import type { ReadmeDoc } from "./types";
+
+function readme(markdown: string): ReadmeDoc {
+  return { markdown, context: { owner: "Rubenpd66", repo: "blog", branch: "main" } };
+}
 
 const links = { github: "https://github.com/Rubenpd66" };
 
@@ -19,7 +24,8 @@ describe("buildFeatured", () => {
       privateProjects: [{ slug: "erp", title: "ERP", technologies: ["Java"] }],
     });
 
-    const featured = buildFeatured(config, [shop, blog], new Map([["blog", "Resumen del blog"]]));
+    const blogReadme = readme("# Blog\n\nResumen del blog");
+    const featured = buildFeatured(config, [shop, blog], new Map([["blog", blogReadme]]));
 
     expect(featured.map((f) => f.slug)).toEqual(["blog", "shop", "erp"]);
     expect(featured[0]).toEqual({
@@ -29,8 +35,13 @@ describe("buildFeatured", () => {
       image: null,
       demoUrl: "https://blog.example.com",
       summary: "Resumen del blog",
+      readme: blogReadme,
     });
-    expect(featured[1]).toMatchObject({ image: { src: "/shop.png", alt: "Tienda" }, summary: null });
+    expect(featured[1]).toMatchObject({
+      image: { src: "/shop.png", alt: "Tienda" },
+      summary: null,
+      readme: null,
+    });
   });
 
   it("falls back to the repo homepage as demo URL", () => {
@@ -54,11 +65,11 @@ describe("buildFeatured", () => {
     expect(() => buildFeatured(config, [shop], new Map())).toThrow(/shop/);
   });
 
-  it("does not read summaries from the object prototype", () => {
+  it("does not read READMEs from the object prototype", () => {
     const ctor = makeProject({ slug: "constructor" });
     const config = parsePortfolioConfig({ links, featured: [{ repo: "constructor" }] });
 
-    expect(buildFeatured(config, [ctor], new Map())[0]).toMatchObject({ summary: null });
+    expect(buildFeatured(config, [ctor], new Map())[0]).toMatchObject({ summary: null, readme: null });
   });
 
   it("exposes only the whitelisted fields of private projects", () => {

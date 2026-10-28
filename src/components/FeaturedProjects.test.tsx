@@ -11,6 +11,7 @@ const publicItem: PublicFeatured = {
   image: { src: "/projects/kartana.png", alt: "Captura de Kartana" },
   demoUrl: "https://kartana.example.com",
   summary: "Resumen del README",
+  readme: null,
 };
 
 const privateItem: FeaturedProject = {

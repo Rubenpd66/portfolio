@@ -19,7 +19,8 @@ export function Hero({ profile, links }: HeroProps) {
         alt={`Foto de ${profile.name}`}
         width={112}
         height={112}
-        priority
+        loading="eager"
+        fetchPriority="high"
         className="size-24 rounded-2xl object-cover ring-1 ring-border sm:size-28"
       />
       <div className="flex flex-col gap-4">

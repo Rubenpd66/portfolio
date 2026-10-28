@@ -79,6 +79,20 @@ describe("loadPortfolio", () => {
     expect(data.projects.map((p) => p.slug)).not.toContain("secret");
   });
 
+  it("keeps the full README with the context needed to resolve its URLs", async () => {
+    const repos = [makeRepo({ name: "Alpha", default_branch: "develop" })];
+    const config = parsePortfolioConfig({ ...CONFIG, featured: [{ repo: "alpha" }] });
+    const data = await loadPortfolio(fakeClient(repos, { Alpha: "# Alpha\n\nTexto." }), config);
+
+    expect(data.featured[0]).toMatchObject({
+      kind: "public",
+      readme: {
+        markdown: "# Alpha\n\nTexto.",
+        context: { owner: "Rubenpd66", repo: "Alpha", branch: "develop" },
+      },
+    });
+  });
+
   it("keeps a null summary when the featured repo has no README", async () => {
     const data = await loadPortfolio(fakeClient(REPOS), CONFIG);
     expect(data.featured[0]).toMatchObject({ kind: "public", summary: null });

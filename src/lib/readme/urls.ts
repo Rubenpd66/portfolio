@@ -8,7 +8,7 @@ export type UrlKind = "link" | "image";
 
 const SCHEME = /^[a-z][a-z\d+.-]*:/i;
 const LINK_PROTOCOLS = new Set(["http:", "https:", "mailto:"]);
-const IMAGE_PROTOCOLS = new Set(["http:", "https:"]);
+const IMAGE_PROTOCOLS = new Set(["https:"]);
 
 /**
  * Makes README URLs safe and absolute: relative paths point to the repo on GitHub,

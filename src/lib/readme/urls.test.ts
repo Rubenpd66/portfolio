@@ -58,6 +58,8 @@ describe("resolveReadmeUrl", () => {
     expect(resolveReadmeUrl("data:text/html,<script>", ctx, "image")).toBe("");
     expect(resolveReadmeUrl("vbscript:x", ctx, "link")).toBe("");
     expect(resolveReadmeUrl("mailto:a@b.com", ctx, "image")).toBe("");
+    // Mixed content and third-party tracking over plain http.
+    expect(resolveReadmeUrl("http://example.com/a.png", ctx, "image")).toBe("");
   });
 
   it("encodes the repository context", () => {
