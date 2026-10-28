@@ -19,6 +19,6 @@ npm run dev
 | `npm run typecheck` | Genera tipos de rutas y ejecuta `tsc` |
 | `npm run lint` | ESLint |
 | `npm test` / `npm run test:cov` | Tests unitarios / con cobertura (mínimo 80 %) |
-| `npm run e2e` | Tests E2E con Playwright |
+| `npm run e2e` | Tests E2E con Playwright (contra una web publicada: `E2E_BASE_URL=https://... npm run e2e`) |
 
 El token de GitHub solo se usa en el servidor y nunca se envía al cliente.
