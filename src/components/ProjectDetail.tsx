@@ -35,7 +35,7 @@ export function ProjectDetail({ item }: ProjectDetailProps) {
             <ExternalLink
               href={view.demoUrl}
               aria-label={`Ver demo de ${view.title}`}
-              className={`${buttonClass} bg-accent text-white hover:bg-accent-strong`}
+              className={`${buttonClass} bg-accent text-on-accent hover:bg-accent-hover`}
             >
               Ver demo
             </ExternalLink>

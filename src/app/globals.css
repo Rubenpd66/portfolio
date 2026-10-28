@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Light theme only for the MVP (dark mode is post-MVP). All text pairs meet WCAG AA. */
+/* Light palette by default; dark overrides follow the OS setting (no JS, no flash). theme.test.ts checks WCAG AA. */
 @theme {
   --color-background: #f8fafc;
   --color-surface: #ffffff;
@@ -10,6 +10,28 @@
   --color-accent: #2563eb;
   --color-accent-strong: #1d4ed8;
   --color-accent-soft: #eff6ff;
+  --color-accent-hover: #1d4ed8;
+  --color-on-accent: #ffffff;
+  --color-code: #0f172a;
+  --color-code-foreground: #f8fafc;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #020617;
+    --color-surface: #0f172a;
+    --color-foreground: #f1f5f9;
+    --color-muted: #94a3b8;
+    --color-border: #1e293b;
+    --color-accent-strong: #93c5fd;
+    --color-accent-soft: #172554;
+    --color-code: #1e293b;
+    --color-code-foreground: #e2e8f0;
+  }
 }
 
 @theme inline {
@@ -87,8 +109,8 @@ body {
 .readme pre {
   overflow-x: auto;
   border-radius: 0.75rem;
-  background: var(--color-foreground);
-  color: var(--color-background);
+  background: var(--color-code);
+  color: var(--color-code-foreground);
   padding: 1rem;
   font-size: 0.875rem;
   line-height: 1.6;

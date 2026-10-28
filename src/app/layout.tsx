@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { resolveSiteUrl } from "@/lib/seo/site";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo/site-info";
@@ -22,6 +22,14 @@ export const metadata: Metadata = {
     url: "/",
   },
   twitter: { card: "summary_large_image", title: SITE_NAME, description: SITE_DESCRIPTION },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

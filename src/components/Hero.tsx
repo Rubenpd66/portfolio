@@ -25,7 +25,7 @@ export function Hero({ profile, links }: HeroProps) {
       />
       <div className="flex flex-col gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+          <p className="text-sm font-semibold uppercase tracking-wider text-accent-strong">
             Desarrollador
           </p>
           <h1 className="mt-1 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
@@ -37,14 +37,14 @@ export function Hero({ profile, links }: HeroProps) {
         <nav aria-label="Contacto" className="flex flex-wrap gap-2">
           <ExternalLink
             href={links.github}
-            className={`${linkClass} bg-accent text-white hover:bg-accent-strong`}
+            className={`${linkClass} bg-accent text-on-accent hover:bg-accent-hover`}
           >
             GitHub
           </ExternalLink>
           {links.linkedin && (
             <ExternalLink
               href={links.linkedin}
-              className={`${linkClass} border border-border hover:border-accent hover:text-accent`}
+              className={`${linkClass} border border-border hover:border-accent hover:text-accent-strong`}
             >
               LinkedIn
             </ExternalLink>
@@ -52,7 +52,7 @@ export function Hero({ profile, links }: HeroProps) {
           {links.email && (
             <a
               href={`mailto:${links.email}`}
-              className={`${linkClass} border border-border hover:border-accent hover:text-accent`}
+              className={`${linkClass} border border-border hover:border-accent hover:text-accent-strong`}
             >
               Email
             </a>
