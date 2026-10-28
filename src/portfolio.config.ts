@@ -13,15 +13,20 @@ import { parsePortfolioConfig } from "@/lib/config/schema";
 export const portfolioConfig = parsePortfolioConfig({
   profile: {
     name: "Rubén",
-    bio: "Estudiante de Desarrollo de Aplicaciones Multiplataforma (DAM). Construyo aplicaciones web con TypeScript y automatizo tareas con PowerShell e IA.",
+    bio: "Estudiante de Desarrollo de Aplicaciones Multiplataforma (DAM). Construyo aplicaciones web con TypeScript y Next.js, y juegos en Roblox con Luau.",
   },
   links: {
     github: "https://github.com/Rubenpd66",
     email: "rubenpd66@gmail.com",
   },
   featured: [
-    { repo: "PROYECTO-IA" },
+    { repo: "Kartana" },
+    { repo: "RepoRadar" },
+    { repo: "GuIA" },
+    { repo: "Kleybom" },
     { repo: "portfolio" },
+    { repo: "GTA-Vl" },
+    { repo: "Overcooked-2" },
     // Optional extras: image: { src: "/projects/x.png", alt: "..." }, demoUrl: "https://..."
   ],
   excluded: [],
