@@ -52,7 +52,10 @@ describe("parsePortfolioConfig", () => {
     ).toThrow();
   });
 
-  it("rejects non-http links", () => {
+  it("rejects links that are not https", () => {
+    expect(() => parsePortfolioConfig({ links: { github: "http://github.com/x" } })).toThrow(
+      /https/,
+    );
     expect(() =>
       parsePortfolioConfig({ links: { github: "javascript:alert(1)" } }),
     ).toThrow();
@@ -62,6 +65,16 @@ describe("parsePortfolioConfig", () => {
         privateProjects: [{ slug: "x", title: "X", demoUrl: "ftp://demo" }],
       }),
     ).toThrow();
+  });
+
+  it("only accepts https images from hosts next/image is allowed to load", () => {
+    expect(() =>
+      parsePortfolioConfig({ ...base, profile: { avatarUrl: "https://evil.example/x.png" } }),
+    ).toThrow(/avatars\.githubusercontent\.com/);
+    const avatarUrl = "https://avatars.githubusercontent.com/u/1";
+    expect(parsePortfolioConfig({ ...base, profile: { avatarUrl } }).profile.avatarUrl).toBe(
+      avatarUrl,
+    );
   });
 
   it("rejects image sources that are neither local paths nor https URLs", () => {

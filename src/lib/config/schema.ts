@@ -2,33 +2,36 @@ import { z } from "zod";
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:[-_.][a-z0-9]+)*$/;
 
-const httpUrl = z
+const httpsUrl = z
   .string()
   .trim()
   .refine((value) => {
     try {
-      const { protocol } = new URL(value);
-      return protocol === "https:" || protocol === "http:";
+      return new URL(value).protocol === "https:";
     } catch {
       return false;
     }
-  }, "Debe ser una URL http(s)");
+  }, "Debe ser una URL https");
+
+/** Remote image hosts next/image may load. Keep in sync with `images.remotePatterns` in next.config.ts. */
+export const IMAGE_HOSTS: readonly string[] = ["avatars.githubusercontent.com"];
 
 /** Root-relative path that browsers cannot reinterpret as protocol-relative ("//", "/\", control chars). */
 const LOCAL_PATH = /^\/(?![/\\])[^\\\u0000-\u001f\u007f]*$/;
 
-/** Local file under /public (e.g. "/projects/app.png") or an https URL. */
+/** Local file under /public (e.g. "/projects/app.png") or an https URL on an allowed host. */
 const imageSrc = z
   .string()
   .trim()
   .refine((value) => {
     if (LOCAL_PATH.test(value)) return true;
     try {
-      return new URL(value).protocol === "https:";
+      const url = new URL(value);
+      return url.protocol === "https:" && IMAGE_HOSTS.includes(url.hostname);
     } catch {
       return false;
     }
-  }, "La imagen debe ser una ruta local (/...) o una URL https");
+  }, `La imagen debe ser una ruta local (/...) o una URL https de: ${IMAGE_HOSTS.join(", ")}`);
 
 const imageSchema = z.strictObject({
   src: imageSrc,
@@ -43,8 +46,8 @@ const profileSchema = z.strictObject({
 });
 
 const linksSchema = z.strictObject({
-  github: httpUrl,
-  linkedin: httpUrl.optional(),
+  github: httpsUrl,
+  linkedin: httpsUrl.optional(),
   email: z.email().optional(),
 });
 
@@ -52,7 +55,7 @@ const featuredSchema = z.strictObject({
   /** Exact name of a public repository. */
   repo: z.string().trim().min(1),
   image: imageSchema.optional(),
-  demoUrl: httpUrl.optional(),
+  demoUrl: httpsUrl.optional(),
 });
 
 /**
@@ -65,7 +68,7 @@ const privateProjectSchema = z.strictObject({
   description: z.string().trim().min(1).optional(),
   technologies: z.array(z.string().trim().min(1)).optional(),
   images: z.array(imageSchema).optional(),
-  demoUrl: httpUrl.optional(),
+  demoUrl: httpsUrl.optional(),
 });
 
 const portfolioConfigSchema = z
