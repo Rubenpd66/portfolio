@@ -14,8 +14,7 @@ export const portfolioConfig = parsePortfolioConfig({
   profile: {},
   links: {
     github: "https://github.com/Rubenpd66",
-    // linkedin: "https://www.linkedin.com/in/...",
-    // email: "tu@email.com",
+    email: "rubenpd66@gmail.com",
   },
   featured: [
     // { repo: "portfolio", image: { src: "/projects/portfolio.png", alt: "Portada del portfolio" }, demoUrl: "https://..." },
